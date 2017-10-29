@@ -88,8 +88,6 @@ void debug_simulate_progression()
 int main(int argc, char** argv)
 {
     return process_file(argc, argv);
-    //debug_simulate_progression(); 
-    //debug_win_from_behind();
     return 0;
 }
 
