@@ -35,7 +35,8 @@ public:
     public:
         unsigned operator()(const Score& score) const
         {
-            return std::hash<u32>()(score.bitmap);
+            return (std::hash<u32>()(score.bitmap) ^
+                 (std::hash<u32>()(score.count) << 1) );
         }
     };
 
