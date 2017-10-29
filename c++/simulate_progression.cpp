@@ -30,7 +30,6 @@ Score simulate_progression(double La, double Lb)
 
 void simulate_progression_data(double La, double Lb, HashMapScores& score_map, int num_simulations)
 {
-    srand(time(NULL));
     for(int i=0;i<num_simulations;i++)
     {
        Score score = simulate_progression(La, Lb);
