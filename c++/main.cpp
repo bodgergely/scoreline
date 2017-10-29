@@ -33,6 +33,9 @@ int process_file(int argc, char** argv)
         return -1;
     }
     ull tsc_per_sec = estimate_tsc_per_sec();
+    printf("************************************************************\n");
+    printf("Detected number of cycles per second: %llu (%.2f Ghz)\n", tsc_per_sec, tsc_per_sec / (double)1000000000);
+    printf("************************************************************\n");
     ifstream input_file(argv[1], ifstream::in);
     int num_simulations = atoi(argv[2]);
     string line;
