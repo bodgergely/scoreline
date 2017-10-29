@@ -3,12 +3,13 @@
 
 using namespace std;
 
-const double max_random = (double)RAND_MAX;
+std::random_device rd;
+std::mt19937 e2(rd());
+std::uniform_real_distribution<> dist(0, 1);
 
 double random_uniform()
 {
-   unsigned r = rand();
-   return (double)r / max_random;
+   return dist(e2);
 }
 
 

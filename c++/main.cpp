@@ -56,14 +56,23 @@ int process_file(int argc, char** argv)
 
 }
 
-void debug_win_from_behind()
+void debug_win_from_behind(unsigned bitmap, unsigned count)
 {
     Score score;
-    score.count = 5;
+    score.count = count;
     //  b11010
-    score.bitmap = 0x1A;
+    score.bitmap = bitmap;
     Win win = win_from_behind(score);
-    cout << score.bitmap << " Won by: " << win << endl;
+    cout << "Score: " << score.bitmap << " goal count: " << score.count << " Won by: " << win << endl;
+}
+
+void debug_win_from_behind()
+{
+    debug_win_from_behind(0x1A, 5);
+    // b0000000
+    debug_win_from_behind(0x0, 7);
+    // b100000
+    debug_win_from_behind(0x20, 6);
 }
 
 void debug_simulate_progression()
@@ -81,6 +90,7 @@ int main(int argc, char** argv)
 {
     return process_file(argc, argv);
     //debug_simulate_progression(); 
+    //debug_win_from_behind();
     return 0;
 }
 

@@ -59,15 +59,15 @@ enum Win win_from_behind(const Score& score)
     {
         if(bitmap & 0x1)
         {
-            if(!losing_b)
-                losing_b = 1;
             score_a++;
+            if((score_b < score_a ) && !losing_b)
+                losing_b = 1;
         }
         else
         {
-            if(!losing_a)
-                losing_a = 1;
             score_b++;
+            if((score_a < score_b) && !losing_a)
+                losing_a = 1;
         }
         i++;
         bitmap >>= 0x1;
