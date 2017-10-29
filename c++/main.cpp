@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <vector>
 #include <string>
+#include "rdtsc.h"
 
 using namespace std;
 
@@ -28,9 +29,10 @@ int process_file(int argc, char** argv)
 {
     if(argc < 3)
     {
-        printf("usage: scoreline <filename> <numsimulations>");
+        printf("usage: scoreline <filename> <num_simulations>");
         return -1;
     }
+    ull tsc_per_sec = estimate_tsc_per_sec();
     ifstream input_file(argv[1], ifstream::in);
     int num_simulations = atoi(argv[2]);
     string line;
@@ -41,10 +43,12 @@ int process_file(int argc, char** argv)
         double Lb = atof(data[1].c_str());
         double Pa = atof(data[2].c_str());
         double Pb = atof(data[3].c_str());
+        ull start = rdtsc();
         WinProbs winprobs = simulate(La, Lb, num_simulations);
+        ull took = rdtsc() - start;
         printf("Expected prob A: %f and calculated prob A: %f, Diff: %f\n", Pa, winprobs.Pa, Pa - winprobs.Pa);
         printf("Expected prob B: %f and calculated prob B: %f, Diff: %f\n", Pb, winprobs.Pb, Pb - winprobs.Pb);
-        printf("\n");
+        printf("Seconds to calculate: %f\n", took / (double)tsc_per_sec);
     }
 
     return 0;
