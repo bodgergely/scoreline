@@ -37,16 +37,11 @@ int process_file(int argc, char** argv)
     while(getline(input_file, line))
     {
         vector<string> data = parse_line(line);
-        for(string s : data)
-        {
-            cout << s << endl;
-        }
         double La = atof(data[0].c_str());
         double Lb = atof(data[1].c_str());
         double Pa = atof(data[2].c_str());
         double Pb = atof(data[3].c_str());
-        HashMapScores score_map = simulate_progression_data(La, Lb, num_simulations);
-        WinProbs winprobs = calculate_prob_win_from_behind(score_map);
+        WinProbs winprobs = simulate(La, Lb, num_simulations);
         printf("Expected prob A: %f and calculated prob A: %f, Diff: %f\n", Pa, winprobs.Pa, Pa - winprobs.Pa);
         printf("Expected prob B: %f and calculated prob B: %f, Diff: %f\n", Pb, winprobs.Pb, Pb - winprobs.Pb);
         printf("\n");

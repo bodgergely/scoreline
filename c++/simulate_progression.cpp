@@ -1,6 +1,8 @@
 #include "random.h"
 #include "simulate_progression.h"
 #include <iostream>
+#include <thread>
+#include <vector>
 
 using namespace std;
 
@@ -26,9 +28,8 @@ Score simulate_progression(double La, double Lb)
     return score;
 }
 
-HashMapScores simulate_progression_data(double La, double Lb, int num_simulations)
+void simulate_progression_data(double La, double Lb, HashMapScores& score_map, int num_simulations)
 {
-    HashMapScores score_map;
     srand(time(NULL));
     for(int i=0;i<num_simulations;i++)
     {
@@ -42,8 +43,8 @@ HashMapScores simulate_progression_data(double La, double Lb, int num_simulation
            score_map[score] += 1;
        }
     }
-    return score_map;
 }
+
 
 enum Win win_from_behind(const Score& score)
 {
@@ -105,4 +106,51 @@ WinProbs calculate_prob_win_from_behind(const HashMapScores& score_map)
 
     return probs;
 }
+
+static void _simulate(double La, double Lb, int num_simulations, WinProbs& winprobs)
+{
+    HashMapScores hashmap_scores;
+    simulate_progression_data(La, Lb, hashmap_scores, num_simulations);
+    winprobs = calculate_prob_win_from_behind(hashmap_scores);
+}
+
+WinProbs simulate(double La, double Lb, int num_simulations)
+{
+    unsigned num_cores = thread::hardware_concurrency();
+    unsigned sims_per_thread = (unsigned)num_simulations / num_cores;  
+    unsigned remainder_sims = (unsigned)num_simulations % num_cores;
+
+    vector<WinProbs> winprobs(num_cores);
+    vector<thread> threads; 
+    for(unsigned i=0;i<num_cores;i++)
+    {
+        unsigned sims = sims_per_thread;
+        if(i == num_cores - 1)
+            sims = sims_per_thread + remainder_sims;
+        threads.push_back(thread(_simulate, La, Lb, sims, std::ref(winprobs[i])));
+    }
+
+    for(thread& t : threads)
+    {
+        if(t.joinable())
+            t.join();
+    }
+
+    double PaS = 0.0;
+    double PbS = 0.0;
+    for(const WinProbs& probs : winprobs)
+    {
+        PaS+=probs.Pa;
+        PbS+=probs.Pb;
+    }
+
+    WinProbs winprob;
+    winprob.Pa = PaS / winprobs.size();
+    winprob.Pb = PbS / winprobs.size();
+
+    return winprob;
+
+}
+
+
 

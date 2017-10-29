@@ -58,10 +58,10 @@ typedef struct WinProbs
 typedef std::unordered_map<Score, u32, Score::Hash> HashMapScores;
 
 Score simulate_progression(double La, double Lb);
-HashMapScores simulate_progression_data(double La, double Lb, int num_simulations = 10000000);
+void simulate_progression_data(double La, double Lb, HashMapScores& score_map, int num_simulations = 10000000);
 enum Win win_from_behind(const Score& score);
 WinProbs calculate_prob_win_from_behind(const HashMapScores& score_map);
-
+WinProbs simulate(double La, double Lb, int num_simulations);
 
 #endif
 
