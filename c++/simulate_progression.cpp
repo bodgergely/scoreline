@@ -6,28 +6,6 @@
 
 using namespace std;
 
-Score simulate_progression(double La, double Lb)
-{
-    double T = 0.0;
-    Score score;
-    score.bitmap = 0;
-    score.count = 0;
-
-    u32 mask = 0x1;
-    while(true)
-    {
-        T = T + random_exponential(La + Lb);
-        if(T > 1 || (score.count > 20) )
-            return score;
-        if( random_uniform() < (La / (La + Lb)))
-            score.bitmap |= mask;
-        mask <<= 1;
-        score.count++;
-    }
-
-    return score;
-}
-
 void simulate_progression_data(double La, double Lb, HashMapScores& score_map, int num_simulations)
 {
     for(int i=0;i<num_simulations;i++)
